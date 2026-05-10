@@ -11,43 +11,98 @@
   --bg:#06080c; --surface:#0a0e14; --panel:#0e1419; --border:#182230;
   --accent:#c94f28; --glow:rgba(201,79,40,0.35);
   --text:#a8c0d8; --muted:#2e4458; --white:#e4eff8;
+  --panel-w: 340px;
+  --header-h: 62px;
 }
-html,body { height:100%; overflow:hidden; background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; touch-action:none; user-select:none; -webkit-user-select:none; }
+
+/* ══════════════════════════════════════════
+   BASE
+══════════════════════════════════════════ */
+html,body {
+  height:100%; overflow:hidden;
+  background:var(--bg); color:var(--text);
+  font-family:'DM Sans',sans-serif;
+  touch-action:none; user-select:none; -webkit-user-select:none;
+}
 body { display:flex; flex-direction:column; }
 
+/* ══════════════════════════════════════════
+   HEADER
+══════════════════════════════════════════ */
 header {
   display:flex; align-items:center; justify-content:space-between;
-  padding:0 24px; height:62px;
+  padding:0 24px; height:var(--header-h);
   background:var(--surface); border-bottom:1px solid var(--border);
-  flex-shrink:0; z-index:10; gap:16px;
+  flex-shrink:0; z-index:20; gap:12px;
 }
-.logo-area { display:flex; align-items:center; gap:12px; flex-shrink:0; }
+.logo-area { display:flex; align-items:center; gap:10px; flex-shrink:0; }
 .logo-mark {
-  width:38px; height:38px; border-radius:9px; background:var(--accent);
+  width:36px; height:36px; border-radius:9px; background:var(--accent);
   display:grid; place-items:center;
   font-family:'Syncopate',sans-serif; font-size:10px; font-weight:700; color:#fff;
+  flex-shrink:0;
 }
 .app-title {
   font-family:'Syncopate',sans-serif; font-size:10px; font-weight:700;
   letter-spacing:4px; text-transform:uppercase; color:var(--white); white-space:nowrap;
 }
-.organ-tabs { display:flex; gap:6px; flex:1; justify-content:center; }
+
+/* Desktop organ tabs */
+.organ-tabs {
+  display:flex; gap:6px; flex:1; justify-content:center; flex-wrap:wrap;
+}
 .organ-tab {
-  display:flex; align-items:center; gap:8px; padding:0 18px; height:42px;
+  display:flex; align-items:center; gap:7px; padding:0 16px; height:40px;
   background:var(--panel); border:1.5px solid var(--border); border-radius:10px; cursor:pointer;
-  font-family:'DM Sans',sans-serif; font-size:14px; font-weight:500;
-  color:var(--text); transition:all 0.2s; white-space:nowrap; -webkit-tap-highlight-color:transparent;
+  font-family:'DM Sans',sans-serif; font-size:13px; font-weight:500;
+  color:var(--text); transition:all 0.2s; white-space:nowrap;
+  -webkit-tap-highlight-color:transparent;
 }
 .organ-tab:hover,.organ-tab:active { background:rgba(201,79,40,0.1); border-color:var(--accent); color:var(--white); }
 .organ-tab.active { background:rgba(201,79,40,0.15); border-color:var(--accent); color:var(--white); box-shadow:0 0 14px var(--glow); }
-.organ-tab .ti { font-size:18px; }
-.spacer { width:120px; flex-shrink:0; }
+.organ-tab .ti { font-size:16px; }
 
+/* Info panel toggle (mobile) */
+#panel-toggle {
+  display:none; align-items:center; justify-content:center;
+  width:40px; height:40px; border-radius:9px;
+  background:var(--panel); border:1.5px solid var(--border);
+  color:var(--text); font-size:18px; cursor:pointer; flex-shrink:0;
+  -webkit-tap-highlight-color:transparent; transition:all 0.15s;
+}
+#panel-toggle.active { border-color:var(--accent); color:var(--accent); }
+
+/* Mobile bottom organ tabs */
+#mobile-tabs {
+  display:none;
+  position:fixed; bottom:0; left:0; right:0; z-index:30;
+  background:var(--surface); border-top:1px solid var(--border);
+  padding:8px 12px calc(8px + env(safe-area-inset-bottom));
+  gap:6px;
+}
+.mob-tab {
+  flex:1; display:flex; flex-direction:column; align-items:center; gap:3px;
+  padding:8px 4px; border-radius:10px; cursor:pointer;
+  border:1.5px solid var(--border); background:var(--panel);
+  transition:all 0.2s; -webkit-tap-highlight-color:transparent;
+}
+.mob-tab .ti { font-size:20px; }
+.mob-tab span { font-size:9px; letter-spacing:1px; color:var(--muted); text-transform:uppercase; font-family:'Syncopate',sans-serif; }
+.mob-tab.active { background:rgba(201,79,40,0.15); border-color:var(--accent); }
+.mob-tab.active span { color:var(--accent); }
+
+/* ══════════════════════════════════════════
+   MAIN LAYOUT
+══════════════════════════════════════════ */
 main { display:flex; flex:1; overflow:hidden; }
 
+/* ══════════════════════════════════════════
+   3D VIEWER
+══════════════════════════════════════════ */
 #viewer-wrap {
   flex:1; position:relative; overflow:hidden;
   background:radial-gradient(ellipse at 50% 40%,#0c1e32 0%,#06080c 70%);
+  min-width:0;
 }
 .corner { position:absolute; width:22px; height:22px; z-index:2; pointer-events:none; opacity:0.35; }
 .tl{top:16px;left:16px;border-top:1.5px solid var(--accent);border-left:1.5px solid var(--accent);}
@@ -55,25 +110,36 @@ main { display:flex; flex:1; overflow:hidden; }
 .bl{bottom:16px;left:16px;border-bottom:1.5px solid var(--accent);border-left:1.5px solid var(--accent);}
 .br{bottom:16px;right:16px;border-bottom:1.5px solid var(--accent);border-right:1.5px solid var(--accent);}
 
-#hud { position:absolute; top:20px; left:50%; transform:translateX(-50%); z-index:3; text-align:center; pointer-events:none; }
-#hud h2 { font-family:'Syncopate',sans-serif; font-size:20px; font-weight:700; color:var(--white); letter-spacing:5px; text-transform:uppercase; text-shadow:0 0 40px var(--glow); }
+#hud {
+  position:absolute; top:20px; left:50%; transform:translateX(-50%);
+  z-index:3; text-align:center; pointer-events:none;
+}
+#hud h2 {
+  font-family:'Syncopate',sans-serif; font-size:20px; font-weight:700;
+  color:var(--white); letter-spacing:5px; text-transform:uppercase;
+  text-shadow:0 0 40px var(--glow);
+}
 #hud p { font-size:9px; color:var(--muted); letter-spacing:3px; text-transform:uppercase; margin-top:4px; }
 
 #reset-btn {
   position:absolute; left:18px; top:18px; z-index:4;
-  padding:0 16px; height:40px; border-radius:9px;
+  padding:0 14px; height:38px; border-radius:9px;
   background:rgba(10,14,20,0.85); border:1.5px solid var(--border);
-  color:var(--text); font-family:'DM Sans',sans-serif; font-size:13px;
+  color:var(--text); font-family:'DM Sans',sans-serif; font-size:12px;
   cursor:pointer; backdrop-filter:blur(8px); transition:all 0.15s;
   display:flex; align-items:center; gap:7px; -webkit-tap-highlight-color:transparent;
+  white-space:nowrap;
 }
 #reset-btn:hover { border-color:var(--accent); color:var(--white); }
 
-#controls { position:absolute; right:18px; top:50%; transform:translateY(-50%); z-index:4; display:flex; flex-direction:column; gap:7px; }
+#controls {
+  position:absolute; right:18px; top:50%; transform:translateY(-50%);
+  z-index:4; display:flex; flex-direction:column; gap:7px;
+}
 .ctrl-btn {
-  width:52px; height:52px; border-radius:13px;
+  width:48px; height:48px; border-radius:12px;
   background:rgba(10,14,20,0.85); border:1.5px solid var(--border);
-  color:var(--text); font-size:20px;
+  color:var(--text); font-size:18px;
   display:grid; place-items:center; cursor:pointer;
   transition:all 0.15s; backdrop-filter:blur(8px); -webkit-tap-highlight-color:transparent;
 }
@@ -83,28 +149,51 @@ main { display:flex; flex:1; overflow:hidden; }
 
 #zoom-btns { position:absolute; left:18px; bottom:18px; z-index:4; display:flex; gap:7px; }
 .zoom-btn {
-  width:50px; height:50px; border-radius:11px;
+  width:46px; height:46px; border-radius:11px;
   background:rgba(10,14,20,0.85); border:1.5px solid var(--border);
-  color:var(--text); font-size:24px; font-weight:300;
+  color:var(--text); font-size:22px; font-weight:300;
   display:grid; place-items:center; cursor:pointer;
   backdrop-filter:blur(8px); transition:all 0.15s; -webkit-tap-highlight-color:transparent;
 }
 .zoom-btn:hover,.zoom-btn:active { border-color:var(--accent); color:var(--white); }
 
-#loading { position:absolute; inset:0; z-index:5; background:rgba(6,8,12,0.92); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:14px; opacity:0; pointer-events:none; transition:opacity 0.25s; }
+#loading {
+  position:absolute; inset:0; z-index:5;
+  background:rgba(6,8,12,0.92); display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:14px;
+  opacity:0; pointer-events:none; transition:opacity 0.25s;
+}
 #loading.show { opacity:1; pointer-events:all; }
 .ring { width:50px; height:50px; border:3px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin 0.8s linear infinite; }
 @keyframes spin { to { transform:rotate(360deg); } }
 #loading p { font-family:'Syncopate',sans-serif; font-size:9px; letter-spacing:3px; color:var(--muted); }
 
-#error-msg { position:absolute; inset:0; z-index:4; display:none; flex-direction:column; align-items:center; justify-content:center; gap:10px; font-family:'Syncopate',sans-serif; font-size:10px; color:var(--muted); letter-spacing:2px; }
+#error-msg {
+  position:absolute; inset:0; z-index:4; display:none;
+  flex-direction:column; align-items:center; justify-content:center; gap:10px;
+  font-family:'Syncopate',sans-serif; font-size:10px; color:var(--muted); letter-spacing:2px;
+}
 #error-msg.show { display:flex; }
 
-#tooltip { position:absolute; z-index:6; background:var(--panel); border:1.5px solid var(--accent); border-radius:7px; padding:7px 14px; font-family:'Syncopate',sans-serif; font-size:9px; color:var(--accent); letter-spacing:2px; text-transform:uppercase; pointer-events:none; opacity:0; transition:opacity 0.15s; white-space:nowrap; box-shadow:0 4px 20px var(--glow); }
+#tooltip {
+  position:absolute; z-index:6;
+  background:var(--panel); border:1.5px solid var(--accent); border-radius:7px;
+  padding:7px 14px; font-family:'Syncopate',sans-serif; font-size:9px;
+  color:var(--accent); letter-spacing:2px; text-transform:uppercase;
+  pointer-events:none; opacity:0; transition:opacity 0.15s;
+  white-space:nowrap; box-shadow:0 4px 20px var(--glow);
+}
 #tooltip.show { opacity:1; }
 
-/* ── INFO PANEL ── */
-#info-panel { width:340px; flex-shrink:0; background:var(--surface); border-left:1px solid var(--border); display:flex; flex-direction:column; overflow:hidden; }
+/* ══════════════════════════════════════════
+   INFO PANEL (sidebar on desktop/tablet)
+══════════════════════════════════════════ */
+#info-panel {
+  width:var(--panel-w); flex-shrink:0;
+  background:var(--surface); border-left:1px solid var(--border);
+  display:flex; flex-direction:column; overflow:hidden;
+  transition:transform 0.3s cubic-bezier(.4,0,.2,1);
+}
 .panel-tabs { display:flex; border-bottom:1px solid var(--border); flex-shrink:0; }
 .panel-tab {
   flex:1; height:44px; display:flex; align-items:center; justify-content:center;
@@ -117,38 +206,47 @@ main { display:flex; flex:1; overflow:hidden; }
 .panel-page { display:none; flex-direction:column; overflow-y:auto; flex:1; }
 .panel-page.active { display:flex; }
 
-.touch-hint { margin:14px 18px 0; background:rgba(201,79,40,0.07); border:1px solid rgba(201,79,40,0.2); border-radius:9px; padding:11px 14px; display:flex; gap:9px; align-items:center; flex-shrink:0; }
-.touch-hint .th-icon { font-size:20px; flex-shrink:0; }
+.touch-hint {
+  margin:14px 16px 0;
+  background:rgba(201,79,40,0.07); border:1px solid rgba(201,79,40,0.2);
+  border-radius:9px; padding:10px 13px;
+  display:flex; gap:9px; align-items:center; flex-shrink:0;
+}
+.touch-hint .th-icon { font-size:18px; flex-shrink:0; }
 .touch-hint p { font-size:12px; color:var(--accent); line-height:1.5; }
-.info-section { padding:18px 20px 0; }
+
+.info-section { padding:16px 18px 0; }
 .info-label { font-family:'Syncopate',sans-serif; font-size:8px; letter-spacing:2.5px; text-transform:uppercase; color:var(--muted); margin-bottom:9px; }
-#info-name { font-family:'Syncopate',sans-serif; font-size:16px; font-weight:700; color:var(--white); margin-bottom:4px; line-height:1.3; }
+#info-name { font-family:'Syncopate',sans-serif; font-size:15px; font-weight:700; color:var(--white); margin-bottom:4px; line-height:1.3; }
 #info-latin { font-size:12px; font-style:italic; color:var(--accent); margin-bottom:12px; }
-#info-desc { font-size:13px; line-height:1.8; color:var(--text); padding-bottom:18px; border-bottom:1px solid var(--border); }
-.stats { display:grid; grid-template-columns:1fr 1fr; gap:8px; padding:14px 20px; border-bottom:1px solid var(--border); flex-shrink:0; }
-.stat { background:var(--panel); border:1px solid var(--border); border-radius:9px; padding:12px; }
-.stat-v { font-family:'Syncopate',sans-serif; font-size:13px; color:var(--accent); margin-bottom:4px; }
+#info-desc { font-size:13px; line-height:1.8; color:var(--text); padding-bottom:16px; border-bottom:1px solid var(--border); }
+
+.stats { display:grid; grid-template-columns:1fr 1fr; gap:8px; padding:12px 18px; border-bottom:1px solid var(--border); flex-shrink:0; }
+.stat { background:var(--panel); border:1px solid var(--border); border-radius:9px; padding:11px; }
+.stat-v { font-family:'Syncopate',sans-serif; font-size:12px; color:var(--accent); margin-bottom:4px; }
 .stat-l { font-size:9px; color:var(--muted); letter-spacing:1px; text-transform:uppercase; }
-.facts { padding:14px 20px 20px; }
+.facts { padding:12px 18px 18px; }
 .facts-label { font-family:'Syncopate',sans-serif; font-size:8px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:10px; }
 .facts ul { list-style:none; }
 .facts li { display:flex; gap:9px; font-size:12px; color:var(--text); line-height:1.65; margin-bottom:9px; }
 .facts li::before { content:'→'; color:var(--accent); flex-shrink:0; margin-top:2px; }
 
-/* ── PARTS MENU ── */
-.parts-search-wrap { padding:14px 16px 10px; flex-shrink:0; border-bottom:1px solid var(--border); }
+/* ══════════════════════════════════════════
+   PARTS MENU
+══════════════════════════════════════════ */
+.parts-search-wrap { padding:12px 14px 10px; flex-shrink:0; border-bottom:1px solid var(--border); }
 .parts-search {
   width:100%; height:36px; background:var(--panel); border:1.5px solid var(--border);
   border-radius:8px; color:var(--text); font-family:'DM Sans',sans-serif; font-size:13px;
-  padding:0 12px; outline:none; transition:border-color 0.15s;
+  padding:0 12px; outline:none; transition:border-color 0.15s; -webkit-appearance:none;
 }
 .parts-search::placeholder { color:var(--muted); }
 .parts-search:focus { border-color:var(--accent); }
-.parts-list { flex:1; overflow-y:auto; padding:8px 0 16px; }
+.parts-list { flex:1; overflow-y:auto; padding:6px 0 16px; }
 
 .part-group-header {
   display:flex; align-items:center; justify-content:space-between;
-  padding:10px 16px 8px; cursor:pointer; -webkit-tap-highlight-color:transparent;
+  padding:9px 14px 7px; cursor:pointer; -webkit-tap-highlight-color:transparent;
   transition:background 0.15s;
 }
 .part-group-header:hover { background:rgba(201,79,40,0.05); }
@@ -160,19 +258,21 @@ main { display:flex; flex:1; overflow:hidden; }
 
 .part-item {
   display:flex; align-items:center; gap:10px;
-  padding:9px 16px 9px 20px; cursor:pointer; transition:background 0.12s;
+  padding:9px 14px 9px 18px; cursor:pointer; transition:background 0.12s;
   -webkit-tap-highlight-color:transparent; border-left:2px solid transparent;
 }
 .part-item:hover { background:rgba(201,79,40,0.07); }
 .part-item.active { background:rgba(201,79,40,0.12); border-left-color:var(--accent); }
 .part-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; background:var(--muted); transition:background 0.15s; }
-.part-item.active .part-dot, .part-item:hover .part-dot { background:var(--accent); }
+.part-item.active .part-dot,.part-item:hover .part-dot { background:var(--accent); }
 .part-item-name { font-size:13px; color:var(--text); line-height:1.3; }
 .part-item-latin { font-size:10px; color:var(--muted); font-style:italic; margin-top:1px; }
 .part-item.active .part-item-name { color:var(--white); }
-.no-results { padding:24px 16px; text-align:center; font-size:12px; color:var(--muted); display:none; }
+.no-results { padding:24px 14px; text-align:center; font-size:12px; color:var(--muted); display:none; }
 
-/* debug panel */
+/* ══════════════════════════════════════════
+   DEBUG PANEL
+══════════════════════════════════════════ */
 #debug-panel {
   position:absolute; bottom:70px; left:18px; z-index:10;
   background:rgba(6,8,12,0.95); border:1px solid var(--accent); border-radius:9px;
@@ -183,25 +283,161 @@ main { display:flex; flex:1; overflow:hidden; }
 #debug-panel .dmesh { margin-bottom:3px; word-break:break-all; }
 #debug-toggle {
   position:absolute; bottom:18px; right:80px; z-index:4;
-  padding:0 14px; height:40px; border-radius:9px;
+  padding:0 12px; height:38px; border-radius:9px;
   background:rgba(10,14,20,0.85); border:1.5px solid var(--border);
   color:var(--muted); font-family:'DM Sans',sans-serif; font-size:11px;
   cursor:pointer; backdrop-filter:blur(8px); transition:all 0.15s;
-  -webkit-tap-highlight-color:transparent;
+  -webkit-tap-highlight-color:transparent; white-space:nowrap;
 }
 #debug-toggle:hover { border-color:var(--accent); color:var(--accent); }
 
-/* POPUP */
-#part-popup { position:fixed; z-index:20; background:var(--surface); border:1.5px solid var(--accent); border-radius:13px; padding:20px 22px 18px; width:310px; box-shadow:0 12px 50px rgba(0,0,0,0.8),0 0 28px var(--glow); display:none; animation:popIn 0.2s cubic-bezier(.34,1.56,.64,1); }
+/* ══════════════════════════════════════════
+   POPUP
+══════════════════════════════════════════ */
+#part-popup {
+  position:fixed; z-index:50;
+  background:var(--surface); border:1.5px solid var(--accent); border-radius:13px;
+  padding:18px 20px 16px; width:300px;
+  box-shadow:0 12px 50px rgba(0,0,0,0.8),0 0 28px var(--glow);
+  display:none; animation:popIn 0.2s cubic-bezier(.34,1.56,.64,1);
+}
 #part-popup.show { display:block; }
 @keyframes popIn { from{opacity:0;transform:scale(0.9) translateY(10px);}to{opacity:1;transform:scale(1) translateY(0);} }
 .pp-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; }
 .pp-tag { font-family:'Syncopate',sans-serif; font-size:7px; letter-spacing:2px; text-transform:uppercase; color:var(--muted); }
-.pp-close { width:32px; height:32px; border-radius:7px; border:1px solid var(--border); background:var(--panel); color:var(--muted); font-size:15px; cursor:pointer; display:grid; place-items:center; -webkit-tap-highlight-color:transparent; transition:all 0.15s; }
+.pp-close {
+  width:30px; height:30px; border-radius:7px; border:1px solid var(--border);
+  background:var(--panel); color:var(--muted); font-size:14px; cursor:pointer;
+  display:grid; place-items:center; -webkit-tap-highlight-color:transparent; transition:all 0.15s;
+  flex-shrink:0;
+}
 .pp-close:hover { border-color:var(--accent); color:var(--white); }
-#pp-name { font-family:'Syncopate',sans-serif; font-size:14px; font-weight:700; color:var(--white); margin-bottom:3px; line-height:1.3; }
-#pp-latin { font-size:11px; font-style:italic; color:var(--accent); margin-bottom:12px; }
+#pp-name { font-family:'Syncopate',sans-serif; font-size:13px; font-weight:700; color:var(--white); margin-bottom:3px; line-height:1.3; }
+#pp-latin { font-size:11px; font-style:italic; color:var(--accent); margin-bottom:10px; }
 #pp-desc { font-size:12px; line-height:1.75; color:var(--text); }
+
+/* ══════════════════════════════════════════
+   LARGE SCREENS (≥1400px) — wider panel
+══════════════════════════════════════════ */
+@media (min-width:1400px) {
+  :root { --panel-w: 400px; }
+  #info-name { font-size:18px; }
+  #info-desc { font-size:14px; }
+  .organ-tab { font-size:14px; padding:0 20px; height:42px; }
+  .app-title { font-size:11px; }
+}
+@media (min-width:1800px) {
+  :root { --panel-w: 460px; }
+  .stats { gap:10px; }
+  .stat { padding:14px; }
+  .stat-v { font-size:14px; }
+}
+
+/* ══════════════════════════════════════════
+   TABLET (768px – 1023px)
+══════════════════════════════════════════ */
+@media (max-width:1023px) {
+  :root { --panel-w: 300px; }
+  .app-title { display:none; }
+  .organ-tab { padding:0 12px; font-size:12px; gap:5px; height:38px; }
+  .organ-tab .ti { font-size:15px; }
+  #info-name { font-size:14px; }
+  #info-desc { font-size:12px; }
+  .stat-v { font-size:11px; }
+  #debug-toggle { display:none; }
+}
+
+/* ══════════════════════════════════════════
+   MOBILE (≤767px) — completely different layout
+══════════════════════════════════════════ */
+@media (max-width:767px) {
+  :root { --header-h: 54px; }
+
+  /* Hide desktop tabs from header */
+  .organ-tabs { display:none; }
+  .app-title { font-size:9px; letter-spacing:2px; }
+
+  /* Show panel toggle button */
+  #panel-toggle { display:flex; }
+
+  /* Show mobile bottom tab bar */
+  #mobile-tabs { display:flex; }
+
+  /* Viewer fills most of screen */
+  #viewer-wrap { flex:1; }
+
+  /* Panel becomes a slide-over sheet from the right */
+  #info-panel {
+    position:fixed; top:var(--header-h); right:0; bottom:0;
+    width:min(340px, 92vw); z-index:40;
+    border-left:1px solid var(--border);
+    transform:translateX(100%);
+    transition:transform 0.3s cubic-bezier(.4,0,.2,1);
+    box-shadow:-8px 0 40px rgba(0,0,0,0.7);
+  }
+  #info-panel.open { transform:translateX(0); }
+
+  /* Overlay behind panel */
+  #panel-overlay {
+    position:fixed; inset:0; z-index:39;
+    background:rgba(0,0,0,0.55); display:none;
+    top:var(--header-h);
+  }
+  #panel-overlay.show { display:block; }
+
+  /* Move zoom buttons up to avoid mobile tab bar */
+  #zoom-btns { bottom:calc(70px + env(safe-area-inset-bottom) + 12px); }
+  .bl { bottom:calc(70px + env(safe-area-inset-bottom) + 14px); }
+  .br { bottom:calc(70px + env(safe-area-inset-bottom) + 14px); }
+
+  /* HUD smaller */
+  #hud h2 { font-size:14px; letter-spacing:3px; }
+  #hud p  { font-size:8px; letter-spacing:2px; }
+
+  /* Controls smaller */
+  .ctrl-btn { width:42px; height:42px; font-size:16px; }
+  #controls { right:12px; gap:6px; }
+
+  /* Zoom buttons */
+  .zoom-btn { width:42px; height:42px; font-size:20px; }
+  #zoom-btns { left:12px; gap:6px; }
+
+  /* Reset btn */
+  #reset-btn { left:12px; top:12px; height:34px; font-size:11px; padding:0 10px; }
+
+  /* Popup full-width bottom sheet on mobile */
+  #part-popup {
+    position:fixed; bottom:calc(64px + env(safe-area-inset-bottom));
+    left:12px; right:12px; top:auto; width:auto;
+    border-radius:16px 16px 12px 12px;
+    animation:slideUp 0.25s cubic-bezier(.34,1.4,.64,1);
+  }
+  @keyframes slideUp { from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);} }
+
+  /* Info inside panel */
+  .info-section { padding:14px 16px 0; }
+  .stats { padding:10px 16px; gap:7px; }
+  .stat { padding:10px; }
+  .facts { padding:10px 16px 16px; }
+  .touch-hint { margin:12px 14px 0; }
+  .parts-search-wrap { padding:10px 12px 8px; }
+  .part-item { padding:9px 12px 9px 16px; }
+}
+
+/* ══════════════════════════════════════════
+   VERY SMALL (≤380px)
+══════════════════════════════════════════ */
+@media (max-width:380px) {
+  :root { --header-h: 50px; }
+  .logo-mark { width:30px; height:30px; font-size:8px; }
+  .app-title { font-size:8px; letter-spacing:1.5px; }
+  #hud h2 { font-size:12px; letter-spacing:2px; }
+  #hud p { display:none; }
+  .ctrl-btn { width:38px; height:38px; font-size:15px; }
+  .zoom-btn { width:38px; height:38px; font-size:18px; }
+  .mob-tab .ti { font-size:18px; }
+  .mob-tab span { font-size:8px; }
+}
 </style>
 </head>
 <body>
@@ -217,15 +453,18 @@ main { display:flex; flex:1; overflow:hidden; }
     <button class="organ-tab"        id="btn-lungs"  onclick="loadOrgan('lungs')"><span class="ti">🫁</span> Бели дробове</button>
     <button class="organ-tab"        id="btn-kidney" onclick="loadOrgan('kidney')"><span class="ti">🫘</span> Бъбреци</button>
   </div>
-  <div class="spacer"></div>
+  <button id="panel-toggle" onclick="togglePanel()" aria-label="Отвори информация">ℹ</button>
 </header>
+
+<!-- Mobile overlay -->
+<div id="panel-overlay" onclick="togglePanel()"></div>
 
 <main>
   <div id="viewer-wrap">
     <div class="corner tl"></div><div class="corner tr"></div>
     <div class="corner bl"></div><div class="corner br"></div>
     <div id="hud"><h2 id="hud-title">СЪРЦЕ</h2><p id="hud-sub">COR — СЪРДЕЧНО-СЪДОВА СИСТЕМА</p></div>
-    <button id="reset-btn" onclick="resetView()">↺ Нулирай изглед</button>
+    <button id="reset-btn" onclick="resetView()">↺ Нулирай</button>
     <div id="controls">
       <button class="ctrl-btn on" id="rotate-btn" onclick="toggleRotate()">⟳</button>
       <div class="ctrl-sep"></div>
@@ -251,7 +490,7 @@ main { display:flex; flex:1; overflow:hidden; }
 
     <div class="panel-page active" id="page-info">
       <div class="touch-hint"><span class="th-icon">👆</span><p>Цъкни върху орган за подробна информация</p></div>
-      <div class="info-section" style="margin-top:16px;">
+      <div class="info-section" style="margin-top:14px;">
         <div class="info-label" id="info-crumb">ИЗБРАН ОРГАН</div>
         <div id="info-name">Сърце</div>
         <div id="info-latin">Cor</div>
@@ -276,6 +515,14 @@ main { display:flex; flex:1; overflow:hidden; }
   </div>
 </main>
 
+<!-- Mobile bottom nav -->
+<div id="mobile-tabs">
+  <div class="mob-tab active" id="mob-heart"  onclick="loadOrgan('heart')"><span class="ti">❤️</span><span>Сърце</span></div>
+  <div class="mob-tab"        id="mob-brain"  onclick="loadOrgan('brain')"><span class="ti">🧠</span><span>Мозък</span></div>
+  <div class="mob-tab"        id="mob-lungs"  onclick="loadOrgan('lungs')"><span class="ti">🫁</span><span>Дробове</span></div>
+  <div class="mob-tab"        id="mob-kidney" onclick="loadOrgan('kidney')"><span class="ti">🫘</span><span>Бъбреци</span></div>
+</div>
+
 <div id="part-popup">
   <div class="pp-header"><div class="pp-tag">АНАТОМИЧНА СТРУКТУРА</div><button class="pp-close" onclick="closePopup()">✕</button></div>
   <div id="pp-name"></div><div id="pp-latin"></div><div id="pp-desc"></div>
@@ -295,11 +542,10 @@ const ORGANS = {
     facts:['Бие ~100 000 пъти на ден','Изпомпва ~7 000 литра кръв дневно','Разполага с собствена електрическа система — синусов възел','Лявата камера е по-дебела, тъй като изпомпва кръв към цялото тяло'],
     partGroups:[
       { label:'Мускулна стена', parts:[
-        { meshName:'__any__', name:'Миокард', latin:'Myocardium', desc:'Миокардът е мускулната стена на сърцето. Изграден е от кардиомиоцити — клетки, способни да се свиват ритмично без умора. Дясната половина изпраща кръв към белите дробове за насищане с кислород, а лявата — насища органите и тъканите с обогатена кръв.' }
+        { meshName:'__any__', name:'Миокард', latin:'Myocardium', desc:'Миокардът е мускулната стена на сърцето. Изграден е от кардиомиоцити — клетки, способни да се свиват ритмично без умора.' }
       ]}
     ]
   },
-
   brain: {
     file:'brain_project.glb',
     hudTitle:'МОЗЪК', hudSub:'CEREBRUM — НЕРВНА СИСТЕМА',
@@ -309,92 +555,80 @@ const ORGANS = {
     facts:['Използва ~20% от кислорода и ~25% от глюкозата на тялото','Съдържа около 86 милиарда неврона','Мозъкът няма болкови рецептори — не усеща болка директно','Невроните могат да провеждат импулси до 120 м/сек'],
     partGroups:[
       { label:'Мозъчна кора и полукълба', parts:[
-        { meshName:'Brain_Part_04_Colour_Brain_Texture_0', name:'Мозъчна кора', latin:'Cortex cerebri', desc:'Мозъчната кора е тънкият (~2-4 мм), силно набръчкан външен слой от сиво вещество. Тя е в основата на всички висши психични функции: съзнание, реч, логическо мислене, творчество, доброволни движения и дългосрочна памет. Разделена е на 4 дяла — челен, теменен, слепоочен и тилен.' },
-        { meshName:'Brain_Part_06_Colour_Brain_Texture_0', name:'Дясно полукълбо', latin:'Hemisphaerium dextrum', desc:'Дясното полукълбо управлява лявата половина на тялото и е специализирано в холистичното, интуитивното мислене. Разпознава лица, обработва музика, пространствени отношения и невербална комуникация.' },
-        { meshName:'Brain_Part_03_Colour_Brain_Texture_0', name:'Мазолесто тяло', latin:'Corpus callosum', desc:'Мазолестото тяло е масивен пакет от ~250 милиона нервни влакна, свързващ двете мозъчни полукълба. Осигурява мигновен обмен на информация между тях — координация на ръцете, езикова интеграция, зрителна обработка.' }
+        { meshName:'Brain_Part_04_Colour_Brain_Texture_0', name:'Мозъчна кора', latin:'Cortex cerebri', desc:'Мозъчната кора е тънкият (~2-4 мм), силно набръчкан външен слой от сиво вещество.' },
+        { meshName:'Brain_Part_06_Colour_Brain_Texture_0', name:'Дясно полукълбо', latin:'Hemisphaerium dextrum', desc:'Дясното полукълбо управлява лявата половина на тялото и е специализирано в холистичното, интуитивното мислене.' },
+        { meshName:'Brain_Part_03_Colour_Brain_Texture_0', name:'Мазолесто тяло', latin:'Corpus callosum', desc:'Мазолестото тяло е масивен пакет от ~250 милиона нервни влакна, свързващ двете мозъчни полукълба.' }
       ]},
       { label:'Дълбоки структури', parts:[
-        { meshName:'Brain_Part_05_Colour_Brain_Texture_0', name:'Лимбична система', latin:'Systema limbicum', desc:'Лимбичната система е "емоционалният мозък". Хипокампусът превръща краткосрочните спомени в дългосрочни. Амигдалата обработва страха, гнева и удоволствието. Хипоталамусът регулира хормоните, апетита, жаждата и телесната температура.' }
+        { meshName:'Brain_Part_05_Colour_Brain_Texture_0', name:'Лимбична система', latin:'Systema limbicum', desc:'Лимбичната система е "емоционалният мозък". Хипокампусът превръща краткосрочните спомени в дългосрочни.' }
       ]},
       { label:'Заден мозък', parts:[
-        { meshName:'Brain_Part_01_Colour_Brain_Texture_0', name:'Малко мозъче', latin:'Cerebellum', desc:'Малкото мозъче заема задната долна част на черепа и координира точността на движенията, равновесието и позата. Въпреки малкия си обем (~10% от масата на мозъка), съдържа над 50% от всички мозъчни неврони.' },
-        { meshName:'Brain_Part_02_Colour_Brain_Texture_0', name:'Мозъчен ствол', latin:'Truncus cerebri', desc:'Мозъчният ствол контролира жизненоважните автоматични функции: дишане, сърдечен ритъм, кръвно налягане, гълтане и цикъла сън-бодърстване. Включва продълговат мозък, мост и среден мозък.' }
+        { meshName:'Brain_Part_01_Colour_Brain_Texture_0', name:'Малко мозъче', latin:'Cerebellum', desc:'Малкото мозъче координира точността на движенията, равновесието и позата.' },
+        { meshName:'Brain_Part_02_Colour_Brain_Texture_0', name:'Мозъчен ствол', latin:'Truncus cerebri', desc:'Мозъчният ствол контролира жизненоважните автоматични функции: дишане, сърдечен ритъм, кръвно налягане.' }
       ]}
     ]
   },
-
   lungs: {
     file:'lungs.glb',
     hudTitle:'БЕЛИ ДРОБОВЕ', hudSub:'PULMONES — ДИХАТЕЛНА СИСТЕМА',
     name:'Бели дробове', latin:'Pulmones',
-    desc:'Белите дробове са основният орган на дихателната система. Те осигуряват газообмена между вдишания въздух и кръвта — поемат кислород и отделят въглероден диоксид.',
+    desc:'Белите дробове са основният орган на дихателната система. Те осигуряват газообмена между вдишания въздух и кръвта.',
     stats:[{v:'~1.3 кг',l:'Тегло'},{v:'~6 л',l:'Капацитет'},{v:'12–20',l:'Вд./мин.'},{v:'70 м²',l:'Повърхност'}],
     facts:['Десният дроб има 3 дяла, левият — само 2','Белодробната повърхност е колкото тенис корт — ~70 м²','При всяко вдишване влизат около 0.5 л въздух','Белите дробове съдържат около 300 милиона алвеоли'],
     partGroups:[
       { label:'Бели дробове', parts:[
-        { meshName:'Respiratoy_Lung_Geo_Right_Male_Anatomy_Pack_Complete_V05:Male_Respiratory_System_V05:Respiratoy_Lung_mat_0', name:'Десен бял дроб', latin:'Pulmo dexter', desc:'Десният бял дроб е по-голям от левия и е разделен на три дяла: горен, среден и долен. Получава въздух чрез десния главен бронх и обработва около 55% от общия газообмен.' },
-        { meshName:'Respiratoy_Lung_Geo_Left_Male_Anatomy_Pack_Complete_V05:Male_Respiratory_System_V05:Respiratoy_Lung_mat_0', name:'Ляв бял дроб', latin:'Pulmo sinister', desc:'Левият бял дроб е малко по-малък от десния, тъй като сърцето заема пространство вляво. Разделен е само на два дяла: горен и долен. На вътрешната му повърхност има вдлъбнатина — сърдечна ямка.' }
+        { meshName:'Respiratoy_Lung_Geo_Right_Male_Anatomy_Pack_Complete_V05:Male_Respiratory_System_V05:Respiratoy_Lung_mat_0', name:'Десен бял дроб', latin:'Pulmo dexter', desc:'Десният бял дроб е по-голям и е разделен на три дяла: горен, среден и долен.' },
+        { meshName:'Respiratoy_Lung_Geo_Left_Male_Anatomy_Pack_Complete_V05:Male_Respiratory_System_V05:Respiratoy_Lung_mat_0', name:'Ляв бял дроб', latin:'Pulmo sinister', desc:'Левият бял дроб е малко по-малък, разделен на два дяла: горен и долен.' }
       ]},
       { label:'Бронхиално дърво', parts:[
-        { meshName:'Respiratoy_Bronchi_Geo_Right_Male_Anatomy_Pack_Complete_V05:Male_Respiratory_System_V05:Respiratoy_Bronchi_mat_0', name:'Десни бронхи', latin:'Bronchi dextri', desc:'Десният главен бронх е по-широк и по-вертикален от левия — затова чужди тела при аспирация попадат по-често в него. Бронхите се разклоняват до бронхиоли с диаметър под 1 мм.' },
-        { meshName:'Respiratoy_Bronchi_Geo_Left_Male_Anatomy_Pack_Complete_V05:Male_Respiratory_System_V05:Respiratoy_Bronchi_mat_0', name:'Леви бронхи', latin:'Bronchi sinistri', desc:'Левият главен бронх е по-тесен и по-хоризонтален от десния. Заобикаля аортната дъга, преди да влезе в левия дроб. При астма гладката мускулатура около бронхиолите се свива, затруднявайки дишането.' },
-        { meshName:'Respiratoy_Trachea_Geo_Male_Anatomy_Pack_Complete_V05:Male_Respiratory_System_V05:Respiratoy_Bronchi_mat_0', name:'Трахея', latin:'Trachea', desc:'Трахеята е тръбовидна структура с дължина ~12 см, подсилена с 16–20 С-образни хрущялни пръстени. Провежда въздуха от ларинкса към бронхите.' }
+        { meshName:'Respiratoy_Bronchi_Geo_Right_Male_Anatomy_Pack_Complete_V05:Male_Respiratory_System_V05:Respiratoy_Bronchi_mat_0', name:'Десни бронхи', latin:'Bronchi dextri', desc:'Десният главен бронх е по-широк и по-вертикален от левия.' },
+        { meshName:'Respiratoy_Bronchi_Geo_Left_Male_Anatomy_Pack_Complete_V05:Male_Respiratory_System_V05:Respiratoy_Bronchi_mat_0', name:'Леви бронхи', latin:'Bronchi sinistri', desc:'Левият главен бронх е по-тесен и по-хоризонтален от десния.' },
+        { meshName:'Respiratoy_Trachea_Geo_Male_Anatomy_Pack_Complete_V05:Male_Respiratory_System_V05:Respiratoy_Bronchi_mat_0', name:'Трахея', latin:'Trachea', desc:'Трахеята е тръбовидна структура с дължина ~12 см.' }
       ]},
       { label:'Ларинкс', parts:[
-        { meshName:'Respiratory_Cricothyroid_Ligament_Geo_Male_Anatomy_Pack_Complete_V05:Male_Respiratory_System_V05:Respiratory_Cricothyroid_Ligament_mat_0', name:'Крикотиреоиден лигамент', latin:'Ligamentum cricothyroideum', desc:'Крикотиреоидният лигамент свързва щитовидния и пръстеновидния хрущял на ларинкса. Той е анатомичният ориентир при крикотиреотомия — животоспасяваща процедура при пълно запушване на дихателните пътища.' },
-        { meshName:'Respiratoy_Epiglotis_Geo_Male_Anatomy_Pack_Complete_V05:Male_Respiratory_System_V05:Respiratory_Cricothyroid_Ligament_mat_0', name:'Епиглотис', latin:'Epiglottis', desc:'Епиглотисът е листовиден хрущял в основата на езика. При гълтане той автоматично затваря входа на трахеята, насочвайки храната към хранопровода.' },
-        { meshName:'Respiratoy_Thyroid_Membrane_Geo_Male_Anatomy_Pack_Complete_V05:Male_Respiratory_System_V05:Respiratory_Cricothyroid_Ligament_mat_0', name:'Щитовидна мембрана', latin:'Membrana thyrohyoidea', desc:'Щитовидната мембрана е фиброзна структура, свързваща щитовидния хрущял с хиоидната кост. Участва в движенията на ларинкса при преглъщане и фонация.' },
-        { meshName:'Respiratoy_Thyroid_Cartliage_Geo_Male_Anatomy_Pack_Complete_V05:Male_Respiratory_System_V05:Respiratory_Cricothyroid_Ligament_mat_0', name:'Щитовиден хрущял', latin:'Cartilago thyroidea', desc:'Щитовидният хрущял е най-голямото хрущялно образувание на ларинкса. При мъжете предният му ръб изпъква — известен като "адамова ябълка". Защитава гласните струни.' },
-        { meshName:'Respiratoy_True_Vocal_Fold_Geo_Left_Male_Anatomy_Pack_Complete_V05:Male_Respiratory_System_V05:Respiratory_Cricothyroid_Ligament_mat_0', name:'Лява гласна струна', latin:'Plica vocalis sinistra', desc:'Гласните струни са две сдвоени гънки от лигавица и мускул в ларинкса. При фонация те се затварят и вибрират от преминаващия въздух. Честотата определя височината на гласа: мъже ~120 Hz, жени ~220 Hz.' },
-        { meshName:'Respiratoy_True_Vocal_Fold_Geo_Right_Male_Anatomy_Pack_Complete_V05:Male_Respiratory_System_V05:Respiratory_Cricothyroid_Ligament_mat_0', name:'Дясна гласна струна', latin:'Plica vocalis dextra', desc:'Дясната гласна струна работи в идеална симетрия с лявата. При шепот гласните струни остават частично отворени; при мълчание — напълно отворени.' }
+        { meshName:'Respiratory_Cricothyroid_Ligament_Geo_Male_Anatomy_Pack_Complete_V05:Male_Respiratory_System_V05:Respiratory_Cricothyroid_Ligament_mat_0', name:'Крикотиреоиден лигамент', latin:'Ligamentum cricothyroideum', desc:'Свързва щитовидния и пръстеновидния хрущял на ларинкса.' },
+        { meshName:'Respiratoy_Epiglotis_Geo_Male_Anatomy_Pack_Complete_V05:Male_Respiratory_System_V05:Respiratory_Cricothyroid_Ligament_mat_0', name:'Епиглотис', latin:'Epiglottis', desc:'При гълтане затваря входа на трахеята, насочвайки храната към хранопровода.' },
+        { meshName:'Respiratoy_Thyroid_Cartliage_Geo_Male_Anatomy_Pack_Complete_V05:Male_Respiratory_System_V05:Respiratory_Cricothyroid_Ligament_mat_0', name:'Щитовиден хрущял', latin:'Cartilago thyroidea', desc:'Най-голямото хрущялно образувание на ларинкса. Защитава гласните струни.' }
       ]}
     ]
   },
-
   kidney: {
     file:'kidney.glb',
     hudTitle:'БЪБРЕЦИ', hudSub:'RENES — ОТДЕЛИТЕЛНА СИСТЕМА',
     name:'Бъбреци', latin:'Renes',
-    desc:'Бъбреците са двойка органи с форма на боб, намиращи се в задната коремна стена. Те филтрират цялата кръв около 40 пъти дневно, поддържат водно-солевия баланс и регулират кръвното налягане.',
+    desc:'Бъбреците са двойка органи с форма на боб. Те филтрират цялата кръв около 40 пъти дневно, поддържат водно-солевия баланс и регулират кръвното налягане.',
     stats:[{v:'~150 г',l:'Тегло (1 бр.)'},{v:'1.5–2 л',l:'Урина/ден'},{v:'180 л',l:'Филтрат/ден'},{v:'~1 млн',l:'Нефрони'}],
     facts:['Всяка минута бъбреците получават около 1.2 л кръв','Около 99% от филтрираната течност се реабсорбира обратно','Бъбреците синтезират хормона еритропоетин','Човек може да живее нормален живот само с един здрав бъбрек'],
     partGroups:[
       { label:'Структура на бъбрека', parts:[
-        { meshName:'Object_0', name:'Бъбречна кора', latin:'Cortex renalis', desc:'Бъбречната кора е външният слой на бъбрека (~1 см). Тук се намират гломерулите — малки съдови топчета за началната филтрация. В кората са съсредоточени около 85% от нефроните.' },
-        { meshName:'Object_2', name:'Бъбречна медула', latin:'Medulla renalis', desc:'Медулата е вътрешният слой, организиран в 8–18 конусовидни пирамиди. В нея се намират тубулите и събирателните каналчета, концентриращи урината чрез реабсорбция.' },
-        { meshName:'Object_3', name:'Бъбречно легенче', latin:'Pelvis renalis', desc:'Бъбречното легенче е фуниевидна кухина, в която се събира готовата урина. Оттам тя се оттича по уретера към пикочния мехур. Разширяването му — хидронефроза — показва запушване.' },
-        { meshName:'Object_7', name:'Бъбречни чашки', latin:'Calices renales', desc:'Бъбречните чашки събират урината от пирамидите на медулата. Малките чашки се обединяват в по-големи, вливащи се в легенчето. Камъните често се задържат тук.' },
-        { meshName:'Object_8', name:'Бъбречен синус', latin:'Sinus renalis', desc:'Бъбречният синус е централното пространство в бъбрека, изпълнено с мастна тъкан, съдове и нерви. Тук преминават бъбречната артерия и вена.' }
+        { meshName:'Object_0', name:'Бъбречна кора', latin:'Cortex renalis', desc:'Бъбречната кора е външният слой (~1 см). Тук се намират гломерулите за началната филтрация.' },
+        { meshName:'Object_2', name:'Бъбречна медула', latin:'Medulla renalis', desc:'Медулата е вътрешният слой, организиран в конусовидни пирамиди.' },
+        { meshName:'Object_3', name:'Бъбречно легенче', latin:'Pelvis renalis', desc:'Фуниевидна кухина, в която се събира готовата урина.' },
+        { meshName:'Object_7', name:'Бъбречни чашки', latin:'Calices renales', desc:'Събират урината от пирамидите и я отвеждат към легенчето.' },
+        { meshName:'Object_8', name:'Бъбречен синус', latin:'Sinus renalis', desc:'Централното пространство в бъбрека, изпълнено с мастна тъкан и съдове.' }
       ]},
       { label:'Патология (PKD)', parts:[
-        { meshName:'Object_1', name:'Кисти (PKD)', latin:'Cystae renales', desc:'При полицистична бъбречна болест в тъканта се образуват множество течно-изпълнени кисти. Те бавно нарастват, притискат здравата тъкан и намаляват функцията. PKD засяга ~1 от 500 души.' },
-        { meshName:'Object_9', name:'Голяма бъбречна киста', latin:'Cysta renalis magna', desc:'При автозомно-доминантна PKD кистите могат да достигнат над 10 см. Болката в хълбока, кръв в урината и високо кръвно налягане са основните симптоми.' }
+        { meshName:'Object_1', name:'Кисти (PKD)', latin:'Cystae renales', desc:'При полицистична бъбречна болест в тъканта се образуват множество кисти.' },
+        { meshName:'Object_9', name:'Голяма бъбречна киста', latin:'Cysta renalis magna', desc:'При PKD кистите могат да достигнат над 10 см.' }
       ]},
       { label:'Съдове и жлези', parts:[
-        { meshName:'Object_6', name:'Бъбречни съдове', latin:'Vasa renalia', desc:'Бъбреците получават около 20–25% от сърдечния дебит — ~1.2 л/мин. Бъбречната артерия се разклонява до хиляди гломерули. Диабетът и хипертонията са водещи причини за увреждането им.' },
-        { meshName:'Object_4', name:'Уретер', latin:'Ureter', desc:'Уретерът е мускулна тръба (~25–30 см, диаметър ~3–4 мм), провеждаща урината до пикочния мехур чрез перисталтика. Бъбречните камъни причиняват силна болка когато се наклинят в него.' },
-        { meshName:'Object_5', name:'Надбъбречна жлеза', latin:'Glandula suprarenalis', desc:'Надбъбречните жлези (~4–5 г) са върху горния полюс на всеки бъбрек. Произвеждат кортизол, алдостерон, адреналин и норадреналин — жизненоважни хормони за стресовия отговор.' }
+        { meshName:'Object_6', name:'Бъбречни съдове', latin:'Vasa renalia', desc:'Бъбреците получават около 20–25% от сърдечния дебит.' },
+        { meshName:'Object_4', name:'Уретер', latin:'Ureter', desc:'Мускулна тръба (~25–30 см), провеждаща урината до пикочния мехур.' },
+        { meshName:'Object_5', name:'Надбъбречна жлеза', latin:'Glandula suprarenalis', desc:'Произвеждат кортизол, алдостерон, адреналин и норадреналин.' }
       ]}
     ]
   }
 };
 
-// ══════════════════════════════════════════════════════
-//  КЕШИРАНА PARTS MAP — изгражда се веднъж при зареждане
-// ══════════════════════════════════════════════════════
 let cachedPartsMap = {};
 
 function buildPartsMap(organ) {
   const map = {};
-  (organ.partGroups || []).forEach(g => {
-    g.parts.forEach(p => { map[p.meshName] = p; });
-  });
+  (organ.partGroups || []).forEach(g => g.parts.forEach(p => { map[p.meshName] = p; }));
   return map;
 }
 
-// ══════════════════════════════════════════════════════
-//  THREE.JS
-// ══════════════════════════════════════════════════════
+// ── THREE.JS ──
 const wrap = document.getElementById('viewer-wrap');
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(50, 1, 0.01, 500);
@@ -425,19 +659,34 @@ const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 let pointerDownTime = 0, pointerMoved = false;
 
+// ── PANEL TOGGLE (mobile) ──
+function togglePanel() {
+  const panel = document.getElementById('info-panel');
+  const overlay = document.getElementById('panel-overlay');
+  const btn = document.getElementById('panel-toggle');
+  const isOpen = panel.classList.toggle('open');
+  overlay.classList.toggle('show', isOpen);
+  btn.classList.toggle('active', isOpen);
+}
+
 function loadOrgan(key) {
   const data = ORGANS[key]; if (!data) return;
   currentOrganKey = key;
-  cachedPartsMap = buildPartsMap(data); // кешираме веднъж
+  cachedPartsMap = buildPartsMap(data);
 
+  // Desktop tabs
   document.querySelectorAll('.organ-tab').forEach(b => b.classList.remove('active'));
   const btn = document.getElementById('btn-' + key); if (btn) btn.classList.add('active');
+
+  // Mobile tabs
+  document.querySelectorAll('.mob-tab').forEach(b => b.classList.remove('active'));
+  const mob = document.getElementById('mob-' + key); if (mob) mob.classList.add('active');
 
   document.getElementById('hud-title').textContent = data.hudTitle;
   document.getElementById('hud-sub').textContent   = data.hudSub;
   setPanel(data.name, data.latin, data.desc, 'ИЗБРАН ОРГАН');
 
-  const sv = ['s1v','s2v','s3v','s4v'], sl = ['s1l','s2l','s3l','s4l'];
+  const sv=['s1v','s2v','s3v','s4v'], sl=['s1l','s2l','s3l','s4l'];
   data.stats.forEach((s,i) => { document.getElementById(sv[i]).textContent=s.v; document.getElementById(sl[i]).textContent=s.l; });
   document.getElementById('facts-list').innerHTML = data.facts.map(f=>`<li>${f}</li>`).join('');
 
@@ -464,24 +713,17 @@ function loadOrgan(key) {
 
     currentModel = new THREE.Group();
     currentModel.add(model);
-
     meshList = [];
     const debugNames = [];
     model.traverse(obj => {
       if (obj.isMesh) {
         meshList.push(obj);
         originalMaterials.set(obj.uuid, Array.isArray(obj.material)
-          ? obj.material.map(m => m.clone())
-          : obj.material.clone());
+          ? obj.material.map(m => m.clone()) : obj.material.clone());
         debugNames.push(obj.name);
       }
     });
-
-    // Показва mesh имена в debug панела
-    const dl = document.getElementById('debug-list');
-    dl.innerHTML = debugNames.map(n => `<div class="dmesh">${n || '(без име)'}</div>`).join('');
-    console.log('[MESH NAMES for', key, ']', debugNames);
-
+    document.getElementById('debug-list').innerHTML = debugNames.map(n => `<div class="dmesh">${n||'(без име)'}</div>`).join('');
     scene.add(currentModel);
     resetView();
     document.getElementById('loading').classList.remove('show');
@@ -492,32 +734,25 @@ function loadOrgan(key) {
   });
 }
 
-// ══ DEBUG TOGGLE ══
 function toggleDebug() {
   const p = document.getElementById('debug-panel');
   p.style.display = p.style.display === 'block' ? 'none' : 'block';
 }
 
-// ══ PARTS MENU ══
 function buildPartsMenu(data) {
   const list = document.getElementById('parts-list');
   document.getElementById('parts-search').value = '';
   document.getElementById('no-results').style.display = 'none';
   list.innerHTML = '';
-
   (data.partGroups || []).forEach((group, gi) => {
     const groupEl = document.createElement('div');
     groupEl.className = 'part-group open';
-    groupEl.dataset.gi = gi;
-
     const header = document.createElement('div');
     header.className = 'part-group-header';
     header.innerHTML = `<span class="part-group-title">${group.label}</span><span class="part-group-arrow">▶</span>`;
     header.onclick = () => groupEl.classList.toggle('open');
-
     const items = document.createElement('div');
     items.className = 'part-items';
-
     group.parts.forEach(part => {
       const item = document.createElement('div');
       item.className = 'part-item';
@@ -526,26 +761,20 @@ function buildPartsMenu(data) {
       item.onclick = () => selectPartFromMenu(part, item);
       items.appendChild(item);
     });
-
-    groupEl.appendChild(header);
-    groupEl.appendChild(items);
-    list.appendChild(groupEl);
+    groupEl.appendChild(header); groupEl.appendChild(items); list.appendChild(groupEl);
   });
 }
 
 function selectPartFromMenu(part, itemEl) {
   document.querySelectorAll('.part-item').forEach(el => el.classList.remove('active'));
   itemEl.classList.add('active');
-
   if (selectedMesh) { restoreMesh(selectedMesh); selectedMesh = null; }
-
   if (part.meshName === '__any__') {
     meshList.forEach(m => highlightMesh(m, 0xc94f28, 0.6));
   } else {
     const mesh = meshList.find(m => m.name === part.meshName);
     if (mesh) { selectedMesh = mesh; highlightMesh(mesh, 0xc94f28, 1.0); }
   }
-
   setPanel(part.name, part.latin, part.desc, 'ИЗБРАНА СТРУКТУРА');
   switchTab('info');
 }
@@ -555,7 +784,6 @@ function filterParts(query) {
   const data = ORGANS[currentOrganKey];
   const list = document.getElementById('parts-list');
   let anyVisible = false;
-
   list.querySelectorAll('.part-group').forEach((groupEl, gi) => {
     const group = data.partGroups[gi];
     let groupHasVisible = false;
@@ -568,7 +796,6 @@ function filterParts(query) {
     groupEl.style.display = groupHasVisible ? '' : 'none';
     if (q && groupHasVisible) groupEl.classList.add('open');
   });
-
   document.getElementById('no-results').style.display = anyVisible ? 'none' : 'block';
 }
 
@@ -586,12 +813,11 @@ function setPanel(name, latin, desc, crumb) {
   document.getElementById('info-desc').textContent  = desc;
 }
 
-// Използва кешираната map — без rebuild при всяко движение
 function getPartData(mesh) {
   return cachedPartsMap[mesh.name] || cachedPartsMap['__any__'] || null;
 }
 
-// ══ POINTER EVENTS ══
+// ── POINTER ──
 function getPointerPos(e) {
   const rect = wrap.getBoundingClientRect();
   const src = e.changedTouches ? e.changedTouches[0] : e;
@@ -612,7 +838,6 @@ wrap.addEventListener('pointermove', e => {
   raycaster.setFromCamera(mouse, camera);
   const hits = raycaster.intersectObjects(meshList, false);
   const tooltip = document.getElementById('tooltip');
-
   if (hits.length > 0) {
     const part = getPartData(hits[0].object);
     if (part) {
@@ -641,26 +866,28 @@ wrap.addEventListener('pointerup', e => {
     if (hits.length > 0) {
       const hit = hits[0].object;
       const part = getPartData(hit); if (!part) return;
-
       document.querySelectorAll('.part-item').forEach(el => {
         el.classList.toggle('active', el.dataset.meshName === hit.name || (part.meshName === '__any__' && el.dataset.meshName === '__any__'));
       });
-
       if (selectedMesh) restoreMesh(selectedMesh);
       selectedMesh = hit;
       highlightMesh(hit, 0xc94f28, 1.0);
-
       document.getElementById('pp-name').textContent  = part.name;
       document.getElementById('pp-latin').textContent = part.latin;
       document.getElementById('pp-desc').textContent  = part.desc;
-
       const popup = document.getElementById('part-popup');
       popup.classList.add('show');
-      let px = pos.clientX + 24, py = pos.clientY - 24;
-      if (px + 320 > window.innerWidth)  px = pos.clientX - 334;
-      if (py + 300 > window.innerHeight) py = window.innerHeight - 305;
-      if (py < 10) py = 10;
-      popup.style.left = px + 'px'; popup.style.top = py + 'px';
+
+      // Responsive popup positioning
+      const isMobile = window.innerWidth <= 767;
+      if (!isMobile) {
+        let px = pos.clientX + 24, py = pos.clientY - 24;
+        if (px + 320 > window.innerWidth)  px = pos.clientX - 314;
+        if (py + 300 > window.innerHeight) py = window.innerHeight - 305;
+        if (py < 10) py = 10;
+        popup.style.left = px + 'px'; popup.style.top = py + 'px';
+        popup.style.bottom = ''; popup.style.right = '';
+      }
       setPanel(part.name, part.latin, part.desc, 'ИЗБРАНА СТРУКТУРА');
     } else {
       closePopup();
